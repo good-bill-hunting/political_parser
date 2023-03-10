@@ -26,3 +26,8 @@ Basic Steps of the legislative process:
 6. If the Senate makes changes, the bill must return to the House for concurrence.  
 7. The resulting bill returns to the House and Senate for final approval. 
 8. The President then has 10 days to veto the final bill or sign it into law.
+
+Legislator incentive to sponsor bills:
+- Aligned political ideology
+- Constituants' request 
+- Political pressure
