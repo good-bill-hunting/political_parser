@@ -10,9 +10,9 @@ Initial notes/things to watch out for: API scraping, acquiring data, creating a 
 
 
 Data Dictionary:
-|congressional bill| legislative proposals from the House of Representatives and Senate within the United States Congress. More info: https://www.govinfo.gov/help/bills#:~:text=A%20bill%20is%20a%20legislative,(first%20and%20second%20sessions). |
-|political party| Made up of individuals who organize to win elections, operate government, and influence public policy. The Democratic and Republican parties are currently the primary parties in Congress. More info: https://www.senate.gov/reference/reference_index_subjects/Political_Parties_vrd.htm|
-|sponsor| Patron, usually a legislator, who presents a bill or resolution to a legislature for consideration.|
+|congressional bill| legislative proposals from the House of Representatives and Senate within the United States Congress. More info: https://www.govinfo.gov/help/bills#:~:text=A%20bill%20is%20a%20legislative,(first%20and%20second%20sessions). 
+|political party| Made up of individuals who organize to win elections, operate government, and influence public policy. The Democratic and Republican parties are currently the primary parties in Congress. More info: https://www.senate.gov/reference/reference_index_subjects/Political_Parties_vrd.htm
+|sponsor| Patron, usually a legislator, who presents a bill or resolution to a legislature for consideration.
 |initial cosponsor or original cosponsor| Senator or representative who was listed as a cosponsor at the time of a bill's introduction|
 
 Description of how laws are made: https://www.house.gov/the-house-explained/the-legislative-process
