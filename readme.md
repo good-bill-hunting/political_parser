@@ -31,3 +31,9 @@ Legislator incentive to sponsor bills:
 - Aligned political ideology
 - Constituants' request 
 - Political pressure
+
+To reproduce:
+1. Get an api key from: https://www.govinfo.gov/api-signup
+2. Append "&api_key=" to the beginning of your api key string.
+3. In your env.py file, save your api key under the variable "api_key"
+4. Clone the political_parser repo

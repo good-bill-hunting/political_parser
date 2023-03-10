@@ -30,7 +30,7 @@ def get_links_to_bills():
     #While loop to collect the remaining links
     while next_page != None: #first json coming in, next_page url coming in.
 
-        nextPage_link = next_page + "&api_key=" + f'{api_key}' #Creates new url 
+        nextPage_link = next_page + api_key #Creates new url 
         response = requests.get(nextPage_link) #Gets new info
         data = response.json() #Makes new info readable
         next_page = data['nextPage'] #nextpage link assigned
