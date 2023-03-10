@@ -9,7 +9,7 @@ def get_links_to_bills():
     This function gets the links to the full text of bills from the gov info api.
     """
     #Builds the url using your api key.
-    url = f"https://api.govinfo.gov/collections/BILLS/2001-01-01T01%3A01%3A01Z/2023-01-01T01%3A01%3A01Z?pageSize=1000&offsetMark=%2A&api_key={api_key}"
+    url = f"https://api.govinfo.gov/collections/BILLS/2001-01-01T01%3A01%3A01Z/2023-01-01T01%3A01%3A01Z?pageSize=1000&offsetMark=%2A{api_key}"
     
     #Gets each page
     response = requests.get(url)
