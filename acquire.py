@@ -4,6 +4,7 @@ from env import api_key
 import requests
 import json
 import os
+from bs4 import BeautifulSoup
 
 def get_links_to_bills():
     """
@@ -19,6 +20,7 @@ def get_links_to_bills():
         list_of_links = list(links['0'])
 
         return list_of_links
+
     else:
     
         #Builds the url using your api key.
@@ -57,47 +59,66 @@ def get_links_to_bills():
 
         return list_of_links
     
-def acquire_bills():
+def acquire_bills(links, filename="data_bills.csv"):
     """
     This function gets a bill, it's sponsor and their party affiliation.
     """
-    #Gets links to all the bills
-    links = get_links_to_bills()
     
-    # Parameters for the API request
-    params = {
-        'offset': 0,
-        'pageSize': 1000,
-        'api_key': f'{api_key[9:]}'}
-    
-    #List to hold data
-    master_list = []
-    
-    #Loop for getting full dataset
-    for link in links:
-    
-        #Get the summary data
-        response = requests.get(link, params=params)
-        data = response.json()
-
-        #Primary sponsor
-        member = data['members'][0]['memberName']
-        #Party affiliation
-        party = data['members'][0]['party']
-
-        #Getting text of bill
-        link_to_bill = data['download']['txtLink']
-        response = requests.get(link_to_bill, params=params)
-
-        # Make a soup variable holding the response content
-        soup = BeautifulSoup(response.text, 'html.parser')
-        text_of_bill = soup.find('body')
-
-        #Create a dictionary of the items and append to a list
-        temp_dictionary = {"sponsor":member,
-                       "party":party,
-                       "bill_text":text_of_bill}
-        master_list.append(temp_dictionary)
+    #Checks if file is catched
+    if os.path.isfile(filename):
         
-    return_list = pd.DataFrame(master_list)
-    return master_list
+        return pd.read_csv(filename)
+        
+    else:
+        # Parameters for the API request
+        params = {
+            'offset': 0,
+            'pageSize': 1000,
+            'api_key': f'{api_key[9:]}'}
+
+        #List to hold data
+        master_list = []
+        
+        i = 0
+        #Loop for getting full dataset
+        for link in links:
+            
+            #To handle bills without sponsors
+            try:
+                #Get the summary data
+                response = requests.get(link, params=params)
+                data = response.json()
+
+                #Primary sponsor
+                member = data['members'][0]['memberName']
+                #Party affiliation
+                party = data['members'][0]['party']
+
+                #Getting text of bill
+                link_to_bill = data['download']['txtLink']
+                response = requests.get(link_to_bill, params=params)
+
+                # Make a soup variable holding the response content
+                soup = BeautifulSoup(response.text, 'html.parser')
+                text_of_bill = soup.find('body')
+
+                #Create a dictionary of the items and append to a list
+                temp_dictionary = {"sponsor":member,
+                                   "party":party,
+                                   "bill_text":text_of_bill}
+                
+                master_list.append(temp_dictionary)
+
+                i += 1
+                if i % 100 == 0:
+                    print(f'{i}')
+            except KeyError:
+                pass
+        
+        return_list = pd.DataFrame(master_list)
+        #Saving links to csv
+        return_list.to_csv(filename, index=False)        
+        
+        return return_list
+
+        
