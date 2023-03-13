@@ -52,7 +52,7 @@ def get_links_to_bills():
                 list_of_links.append(item['packageLink'])
 
         #Saving links to csv
-        pd.Series(links).to_csv("links_to_summary.csv", index=False)
+        pd.Series(list_of_links).to_csv("links_to_summary.csv", index=False)
 
 
         return list_of_links
