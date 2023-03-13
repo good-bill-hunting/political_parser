@@ -78,11 +78,11 @@ def acquire_bills(links, filename="data_bills.csv"):
 
         #List to hold data
         master_list = []
-        
+        n = 0
         i = 0
         #Loop for getting full dataset
         for link in links:
-            
+            n += 1
             #To handle bills without sponsors
             try:
                 #Get the summary data
@@ -111,7 +111,7 @@ def acquire_bills(links, filename="data_bills.csv"):
 
                 i += 1
                 if i % 100 == 0:
-                    print(f'{i}')
+                    print(f'Acquired: {i} --- Attempted: {n}')
             except KeyError:
                 pass
         
