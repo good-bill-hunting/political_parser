@@ -32,7 +32,6 @@ def clean_text(text, extra_stopwords=[]):
     lemmatized.
     '''
 
-    bills2 = bill_df.loc[bill_df['title'].str.len() >= 35]
     wnl = nltk.stem.WordNetLemmatizer()
     stopwords = nltk.corpus.stopwords.words('english') + extra_stopwords
     clean_text = (unicodedata.normalize('NFKD', text)
@@ -44,6 +43,10 @@ def clean_text(text, extra_stopwords=[]):
     words = re.sub(r'_', '',' '.join(words)).split(' ')
     words = [w for w in words if len(w)<25]
     return [wnl.lemmatize(word) for word in words if word not in stopwords]
+
+
+def join(col):
+    return ' '.join(col)
 
 def split_data(df, target):
     
