@@ -111,7 +111,7 @@ def acquire_bills(links, filename="data_bills.csv"):
 
                 i += 1
                 if i % 100 == 0:
-                    print(f'Acquired: {i} --- Attempted: {n}')
+                    print(f'Attempted: {n} --- Acquired: {i}')
             except KeyError:
                 pass
         
