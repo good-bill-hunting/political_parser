@@ -105,7 +105,7 @@ def acquire_bills(links, filename="data_bills.csv"):
                 #Create a dictionary of the items and append to a list
                 temp_dictionary = {"sponsor":member,
                                    "party":party,
-                                   "bill_text":text_of_bill}
+                                   "bill_text":str(text_of_bill)}
                 
                 master_list.append(temp_dictionary)
 
