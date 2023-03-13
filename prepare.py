@@ -19,7 +19,7 @@ import re
 
 
 def prep_bills(df):
-    '''Prepares acquired world government data for exploration'''
+    '''Prepares acquired world bills data for exploration'''
     
     new_df = df.loc[df['bill_text'].str.len() >= 35]
     
@@ -39,6 +39,7 @@ def clean_text(text, extra_stopwords=[]):
                    .encode('ascii', 'ignore')
                    .decode('utf-8', 'ignore')
                    .lower())
+    words = re.sub(r'[\n]', '', clean_text)
     words = re.sub(r'[^\w\s___]', '', clean_text).split()
     words = re.sub(r'_', '',' '.join(words)).split(' ')
     words = [w for w in words if len(w)<25]
