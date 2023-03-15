@@ -15,15 +15,28 @@ import nltk
 import unicodedata
 import re
 
-
-
-
-def prep_bills(df):
-    '''Prepares acquired world bills data for exploration'''
+def prepare_bills_for_processing(df):
+    """
+    Combines single line code and functions to prepare the data.
+    """
+    #Removes a bill with no text
+    df = df[df.bill_text != "None"]
+    df.bill_text = df.bill_text.apply(bill_trimmer)
     
-    new_df = df.loc[df['bill_text'].str.len() >= 35]
+    # creating a lemmatized column and cleaning the df
+    df['lem']= df.bill_text.apply(clean_text)
+    df['model']= df.lem.apply(join)
+    return df
     
-    return new_df
+def bill_trimmer(input_string):
+    """
+    This function looks at bills and removes everything above 'A BILL' or 'RESOLUTION' or 'AN ACT'.
+    """
+    #Identifies the position of 'A BILL'
+    text_pos = re.split('(A BILL|RESOLUTION|AN ACT)', input_string, 1)
+    output_string = text_pos[2]
+    return output_string
+
 
 def clean_text(text, extra_stopwords=[]):
 
@@ -32,8 +45,14 @@ def clean_text(text, extra_stopwords=[]):
     lemmatized.
     '''
 
+    # creating the lemmatizer
     wnl = nltk.stem.WordNetLemmatizer()
+    
+    # adding an option to input stopwords
     stopwords = nltk.corpus.stopwords.words('english') + extra_stopwords
+    
+    # cleaning the text and making the text lower case, eliminating \n 
+    # and anything that is not aplhanumeric
     clean_text = (unicodedata.normalize('NFKD', text)
                    .encode('ascii', 'ignore')
                    .decode('utf-8', 'ignore')
@@ -46,6 +65,9 @@ def clean_text(text, extra_stopwords=[]):
 
 
 def join(col):
+    
+    '''A function that joins the lemmatized and model columns'''
+    
     return ' '.join(col)
 
 def split_data(df, target):
@@ -66,10 +88,3 @@ def split_data(df, target):
     
     
     return train, X_train, y_train, X_val, y_val, X_test, y_test
-
-
-# In[ ]:
-
-
-
-
