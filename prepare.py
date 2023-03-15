@@ -44,8 +44,12 @@ def clean_text(text, extra_stopwords=[]):
                    'representatives','fiscal','year','shall','adding','end','paragraph',
                    'made','available','prebody','subsection','day','date','submit','described',
                    'may','congress','following','new','enactment','code','section','assembled',
-                   'b','amended','short','title','sec','heading', 'et', 'seq',
-                    'chapter', 'effective','enacted','subchapter','entity']
+                   'b','c','amended','short','title','sec','heading', 'et', 'seq',
+                    'chapter', 'effective','enacted','subchapter','entity', '42', 'usc', 'act', 'establish',
+                       'categorical', 'america', '1', '2', 'seq','authorization',
+                       'appropriations', 'appropriated', 'inserting','numerical',
+                       'sequence','ii']
+
     
     wnl = nltk.stem.WordNetLemmatizer()
     stopwords = nltk.corpus.stopwords.words('english') + extra_stopwords
