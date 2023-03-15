@@ -53,7 +53,7 @@ def lr_mod(X_train, y_train, X_val, y_val, metric = 1, print_scores = False):
     This function runs the Logistic Regression classifier on the training and validation test sets.
     """
     #Creating a logistic regression model
-    logit = LogisticRegression(random_state=1969, max_iter=500, solver='saga', penalty='l1', n_jobs=-1)
+    logit = LogisticRegression(random_state=1969, max_iter=100, solver='saga', penalty='l2', n_jobs=-1)
 
     #Fitting the model to the train dataset
     logit.fit(X_train, y_train)
@@ -103,11 +103,10 @@ def rand_forest(X_train, y_train, X_val, y_val, metric = 1, print_scores = False
     This function runs the Random Forest classifier on the training and validation test sets.
     """
     #Creating the random forest object
-    rf = RandomForestClassifier(bootstrap=False,
-                                class_weight=None, 
-                                criterion='gini',
-                                min_samples_leaf=5,
-                                n_estimators=250,
+    rf = RandomForestClassifier(class_weight="balanced_subsample", 
+                                criterion="entropy",
+                                min_samples_leaf=3,
+                                n_estimators=100,
                                 max_depth=6, 
                                 random_state=1969)
     
@@ -158,7 +157,7 @@ def dec_tree(X_train, y_train, X_val, y_val, metric = 1, print_scores = False):
     This function runs the Decision Tree classifier on the training and validation test sets.
     """
     #Create the model
-    clf = DecisionTreeClassifier(max_depth=6, random_state=1969)
+    clf = DecisionTreeClassifier(criterion="entropy", max_depth=7, min_sample_leaf=7, splitter="random", random_state=1969)
     
     #Train the model
     clf = clf.fit(X_train, y_train)
