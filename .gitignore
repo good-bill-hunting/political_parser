@@ -133,3 +133,6 @@ env.py
 
 # CSV files
 *.csv
+
+#extra stuff not to track
+*.DS_Store
