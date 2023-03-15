@@ -49,39 +49,7 @@ def tokenized(input_string, tokenize_tool=1, return_list=False):
         return tokens
     else:
         token_string = ' '.join(tokens)
-        return token_string
-
-    
-def clean_languages(df):
-    """
-    Takes in a DataFrame, combines Python and C based languages and returns the DataFrame.
-    """
-    
-    df.language[df.language == 'Jupyter Notebook'] = 'Python'
-    df.language[(df.language == 'Objective-C') 
-             |(df.language == 'C#')
-            |(df.language == 'C++') 
-            |(df.language == 'C')] = 'C_based'
-    df.language[(df.language == 'Swift') 
-            | (df.language == 'CSS') 
-            | (df.language == 'HTML')
-            | (df.language == 'TypeScript')
-            | (df.language == 'Lua')
-            | (df.language == 'Kotlin')
-            | (df.language == 'Vue')
-            | (df.language == 'Rust')
-            | (df.language == 'PHP')
-            | (df.language == 'Go')
-            | (df.language == 'Dart')
-            | (df.language == 'Roff')
-            | (df.language == 'Haskell')
-            | (df.language == 'Visual Basic')
-            | (df.language == 'Solidity')
-            | (df.language == 'Clojure')
-            | (df.language == 'Elixir')
-            | (df.language == 'Shell')] = 'Other'
-    df = df[df['language'] != 'Other']
-    return df    
+        return token_string   
 
 def basic_clean(input_string):
     """
@@ -214,3 +182,17 @@ def big_func_to_pre_data(df):
     
     return df
 
+def train_val_test(train, val, test, target_col):
+    """
+    Seperates out the target variable and creates a series with only the target variable to test accuracy.
+    """
+    #Seperating out the target variable
+    X_train = train.drop(columns=[target_col])
+    y_train = train[target_col]
+
+    X_val = val.drop(columns = [target_col])
+    y_val = val[target_col]
+
+    X_test = test.drop(columns = [target_col])
+    y_test = test[target_col]
+    return X_train, y_train, X_val, y_val, X_test, y_test

@@ -22,6 +22,7 @@ def prepare_bills_for_processing(df):
     #Removes a bill with no text
     df = df[df.bill_text != "None"]
     df.bill_text = df.bill_text.apply(bill_trimmer)
+    
     return df
     
 def bill_trimmer(input_string):
@@ -53,7 +54,7 @@ def clean_text(text, extra_stopwords=[]):
                    .encode('ascii', 'ignore')
                    .decode('utf-8', 'ignore')
                    .lower())
-    words = re.sub(r'[\n]', '', clean_text)
+    words = re.sub(r'[\n]', ' ', clean_text)
     words = re.sub(r'[^\w\s___]', '', clean_text).split()
     words = re.sub(r'_', '',' '.join(words)).split(' ')
     words = [w for w in words if len(w)<25]
