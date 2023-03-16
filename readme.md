@@ -13,9 +13,9 @@
 ## :scroll: Goal: 
 Aquire the text of political bills between 2001 and 2023 and use NLP to determine the political sponsor using only the body text of the bill.
 
-
-
 ## :book: Data Dictionary:
+| Feature | Definition |
+|:--------|:-----------|
 |congressional bill| legislative proposals from the House of Representatives and Senate within the United States Congress. More info: https://www.govinfo.gov/help/bills#:~:text=A%20bill%20is%20a%20legislative,(first%20and%20second%20sessions). |
 |political party| Made up of individuals who organize to win elections, operate government, and influence public policy. The Democratic and Republican parties are currently the primary parties in Congress. More info: https://www.senate.gov/reference/reference_index_subjects/Political_Parties_vrd.htm|
 |sponsor| Patron, usually a legislator, who presents a bill or resolution to a legislature for consideration.|
@@ -36,14 +36,14 @@ Basic Steps of the legislative process:
 8. The President then has 10 days to veto the final bill or sign it into law.
 
 ## :page_with_curl: Data Overview:
-#### We aqcuired 26,000+ bills from api.govinfo.gov/.
+#### We acquired 26,000+ bills from api.govinfo.gov/.
 
 - Target Variable: Democrat, Republican, or Independent 
 - One Observation Represents: A sponsored Bill
 - Initial steps: API scraping, acquiring data, creating a list of political parties
 
 ## :question: Initial Questions:
-1) Are there any words unique to a specific political party in determing Congressional Bills?
+1) Are there any words unique to a specific political party in determine Congressional Bills?
 2) What are the top focus areas for each political party and are there any bi-partisan areas or Congressional Bills?
 
 ## :busts_in_silhouette: To reproduce:
@@ -57,9 +57,9 @@ Basic Steps of the legislative process:
 
 ## Project Plan:
 1. Acquire data from govinfo.gov's api.
-2. Prepare data by dropping nulls (one row), cleaning and lemmitizing the text.
+2. Prepare data by dropping nulls (one row), cleaning and lemmatizing the text.
 3. Explore the words each party uses.
-4. Modeling using XGBoost, Decision Tree, Randome Forest, KNN and Logistic Regression.
+4. Modeling using XGBoost, Decision Tree, Random Forest, KNN and Logistic Regression.
     - The accuracy will be the baseline we use for this project.
 
 
@@ -67,19 +67,19 @@ Basic Steps of the legislative process:
 - Each political party had a focus area of concentration: for democrats the main are appears to be healthcare and higher education, republicans are focused on homeland security and China, and independents tend to lean toward economic concerns.
 - The large amount of bills by democrats versus the other political parties may be obscuring the data from the other parties.
 - Common areas of concern appear to be health care and term limits, at least for democrats and republicans.
-- Although specific words may not necessarilly determine if a bill is a certain political party, there are some words that are associated with particualar political interests that could determine if a bill is from a particular political party.
+- Although specific words may not necessarily determine if a bill is a certain political party, there are some words that are associated with particular political interests that could determine if a bill is from a particular political party.
 
 ## Modeling Takeaways:
-- Our baseline was predicting Democrate at 59%
+- Our baseline was predicting Democrat at 59%
 - Four of the five models performed better than the baseline on train and validate.
 - The Logistic Regression model performed the best on train (75%) and validate (71%).
 - We chose to move forward with the Logistic Regression model because KNN may be overfit.
 
 ## Recommendations:
-- The reults from this project should be made public for informational use on the focus of democratic and republican representatives.
+- The results from this project should be made public for informational use on the focus of democratic and republican representatives.
 - An investigation or inquiry should be established to determine why there is an imbalance of bills proposed between the two major political parties.
 
 ## :footprints: Next Steps:
-- This project can be used as a starting point for a larger project on time series where a team can add other NLP bills throughout history and future bills to analyze the change in political areas of concenration over time.
+- This project can be used as a starting point for a larger project on time series where a team can add other NLP bills throughout history and future bills to analyze the change in political areas of concentration over time.
 - Investigate which bills have made it through the process and are now laws and build a model that would predict, based off of the language, whether a bill is made into law or not.
 - Remove the dates from the bills and make another column to sort by the dates in order to determine if there is any change or difference in language between certain timeframes or major events.
