@@ -482,7 +482,7 @@ def final_test(X_train, y_train, X_val, y_val, X_test, y_test):
 
     # Need to have baseline input:
     ax.set_xticks([0.5, 1.0, 1.5], ['Training', 'Validation', 'Test']) 
-    ax.set_ylim(bottom=0, top=1)
+    ax.set_ylim(bottom=0.4, top=1)
     #Zoom into the important area
     #plt.ylim(bottom=200000, top=400000)
     #ax.legend(loc='lower right', framealpha=.9, facecolor="whitesmoke", edgecolor='darkolivegreen')

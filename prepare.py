@@ -23,6 +23,9 @@ def prepare_bills_for_processing(df):
     df = df[df.bill_text != "None"]
     df.bill_text = df.bill_text.apply(bill_trimmer)
     
+    # creating a lemmatized column and cleaning the df
+    df['lem']= df.bill_text.apply(clean_text)
+    df['model']= df.lem.apply(join)
     return df
     
 def bill_trimmer(input_string):
@@ -34,12 +37,6 @@ def bill_trimmer(input_string):
     output_string = text_pos[2]
     return output_string
 
-def prep_bills(df):
-    '''Prepares acquired world bills data for exploration'''
-    
-    new_df = df.loc[df['bill_text'].str.len() >= 35]
-    
-    return new_df
 
 def clean_text(text, extra_stopwords=[]):
 
@@ -48,13 +45,19 @@ def clean_text(text, extra_stopwords=[]):
     lemmatized.
     '''
 
+    # creating the lemmatizer
     wnl = nltk.stem.WordNetLemmatizer()
+    
+    # adding an option to input stopwords
     stopwords = nltk.corpus.stopwords.words('english') + extra_stopwords
+    
+    # cleaning the text and making the text lower case, eliminating \n 
+    # and anything that is not aplhanumeric
     clean_text = (unicodedata.normalize('NFKD', text)
                    .encode('ascii', 'ignore')
                    .decode('utf-8', 'ignore')
                    .lower())
-    words = re.sub(r'[\n]', ' ', clean_text)
+    words = re.sub(r'[\n]', '', clean_text)
     words = re.sub(r'[^\w\s___]', '', clean_text).split()
     words = re.sub(r'_', '',' '.join(words)).split(' ')
     words = [w for w in words if len(w)<25]
@@ -62,6 +65,9 @@ def clean_text(text, extra_stopwords=[]):
 
 
 def join(col):
+    
+    '''A function that joins the lemmatized and model columns'''
+    
     return ' '.join(col)
 
 def split_data(df, target):
@@ -82,10 +88,3 @@ def split_data(df, target):
     
     
     return train, X_train, y_train, X_val, y_val, X_test, y_test
-
-
-# In[ ]:
-
-
-
-
