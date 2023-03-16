@@ -8,7 +8,11 @@ from bs4 import BeautifulSoup
 import os
 from prepare import *
 import matplotlib.pyplot as plt
-
+from sklearn.preprocessing import StandardScaler
+import plotly.express as px
+import nltk
+import re
+import unicodedata
 
 def word_freq_new_df(df, clean_text):
     '''
@@ -48,12 +52,12 @@ def demo_vis(df):
     '''
     
     #Plot the most frequent democratic words and color by label
-    ax = df.sort_values('demo', ascending=False).head(5).plot.bar(color=['lightgrey', 'royalblue', 'red', 'green'], figsize=(16, 9))
+    ax = df.sort_values('demo', ascending=False).head(5).plot.bar(color=['lightgrey', 'royalblue', 'red', 'green'], edgecolor=['black'], lw = 3, figsize=(10, 5))
     plt.title('Most Common Words for Democrats')
     plt.ylabel('Count')
     plt.xlabel('Most Common Words')
     plt.xticks(rotation=45)
-    ax.legend(['Bills', 'Democrat', 'Republican', 'Independent'])
+    ax.legend(['Bills', 'Democrat', 'Republican', 'Independent'], bbox_to_anchor=(1.05, 1), loc='upper left', borderaxespad=0)
     return plt.show()
 
 
@@ -63,12 +67,12 @@ def repub_vis(df):
     '''
     
     #Plot the most frequent democratic words and color by label
-    ax = df.sort_values('repub', ascending=False).head(5).plot.bar(color=['lightgrey', 'royalblue', 'red', 'green'], figsize=(16, 9))
+    ax = df.sort_values('repub', ascending=False).head(5).plot.bar(color=['lightgrey', 'royalblue', 'red', 'green'], edgecolor=['black'], lw = 3, figsize=(10, 5))
     plt.title('Most Common Words for Republicans')
     plt.ylabel('Count')
     plt.xlabel('Most Common Words')
     plt.xticks(rotation=45)
-    ax.legend(['Bills', 'Democrat', 'Republican', 'Independent'])
+    ax.legend(['Bills', 'Democrat', 'Republican', 'Independent'], bbox_to_anchor=(1.05, 1), loc='upper left', borderaxespad=0)
     return plt.show()
 
 
@@ -106,12 +110,12 @@ def ind_vis(df):
     '''
     
     #Plot the most frequent independent words and color by label
-    ax = df.sort_values('ind', ascending=False).head(5).plot.bar(color=['lightgrey', 'royalblue', 'red', 'green'], figsize=(16, 9))
+    ax = df.sort_values('ind', ascending=False).head(5).plot.bar(color=['lightgrey', 'royalblue', 'red', 'green'], edgecolor=['black'], lw = 3, figsize=(10, 5))
     plt.title('Most Common Words for Independents')
     plt.ylabel('Count')
     plt.xlabel('Most Common Words')
     plt.xticks(rotation=45)
-    ax.legend(['Bills', 'Democrat', 'Republican', 'Independent'])
+    ax.legend(['Bills', 'Democrat', 'Republican', 'Independent'], bbox_to_anchor=(1.05, 1), loc='upper left', borderaxespad=0)
     return plt.show()
 
 
@@ -184,7 +188,7 @@ def ind_trigrams_vis(df):
     plt.title('Commonly occurring independent trigrams')
     return plt.show()
 
-def republican_trigram_viz(df):
+def top_trigram_viz(df):
     more_stopwords = ['secretary','united','states','senate','house','representative',
                    'representatives','fiscal','year','shall','adding','end','paragraph',
                    'made','available','prebody','subsection','day','date','submit','described',
@@ -196,6 +200,8 @@ def republican_trigram_viz(df):
                        'sequence','ii']
     
     democrat_words = clean_text(' '.join(df[df['party'] == 'D']['bill_text']), 
+                                 more_stopwords)
+    republican_words = clean_text(' '.join(df[df['party'] == 'R']['bill_text']), 
                                  more_stopwords)
     
     republican_trigrams = pd.Series(nltk.ngrams(republican_words, 3))
@@ -227,9 +233,9 @@ def republican_trigram_viz(df):
     fig.update_layout(font=dict(size=10, color='DarkSlateGray'))
     fig.update_layout(width=800, height=500)
     
-    return fig.show()
+    return fig.show('png')
 
-def democrat_bigrams_viz(df):
+def top_bigrams_viz(df):
     more_stopwords = ['secretary','united','states','senate','house','representative',
                    'representatives','fiscal','year','shall','adding','end','paragraph',
                    'made','available','prebody','subsection','day','date','submit','described',
@@ -241,6 +247,8 @@ def democrat_bigrams_viz(df):
                        'sequence','ii']
     
     democrat_words = clean_text(' '.join(df[df['party'] == 'D']['bill_text']), 
+                                 more_stopwords)
+    republican_words = clean_text(' '.join(df[df['party'] == 'R']['bill_text']), 
                                  more_stopwords)
     democrat_bigrams = pd.Series(nltk.ngrams(democrat_words, 2))
     top_democrat_bigrams =democrat_bigrams.value_counts().head(40)
@@ -275,7 +283,7 @@ def democrat_bigrams_viz(df):
         
     fig.update_layout(font=dict(size=10, color='DarkSlateGray'))
     fig.update_layout(width=800, height=500)
-    fig.show()
+    fig.show('png')
     
     return top_bigrams.head(2)
 
