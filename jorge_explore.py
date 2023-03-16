@@ -13,6 +13,7 @@ import nltk
 import unicodedata
 import re
 from sklearn.preprocessing import StandardScaler
+import plotly.express as px
 
 
 def word_freq_new_df(df, clean_text):
@@ -189,7 +190,7 @@ def ind_trigrams_vis(df):
     plt.title('Commonly occurring independent trigrams')
     return plt.show()
 
-def republican_trigram_viz(df):
+def top_trigram_viz(df):
     more_stopwords = ['secretary','united','states','senate','house','representative',
                    'representatives','fiscal','year','shall','adding','end','paragraph',
                    'made','available','prebody','subsection','day','date','submit','described',
@@ -201,6 +202,9 @@ def republican_trigram_viz(df):
                        'sequence','ii']
     
     democrat_words = clean_text(' '.join(df[df['party'] == 'D']['bill_text']), 
+                                 more_stopwords)
+    
+    republican_words = clean_text(' '.join(df[df['party'] == 'R']['bill_text']), 
                                  more_stopwords)
     
     republican_trigrams = pd.Series(nltk.ngrams(republican_words, 3))
@@ -234,7 +238,7 @@ def republican_trigram_viz(df):
     
     return fig.show()
 
-def democrat_bigrams_viz(df):
+def top_bigrams_viz(df):
     more_stopwords = ['secretary','united','states','senate','house','representative',
                    'representatives','fiscal','year','shall','adding','end','paragraph',
                    'made','available','prebody','subsection','day','date','submit','described',
