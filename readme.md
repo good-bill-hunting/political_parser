@@ -1,3 +1,5 @@
+![My Image](capital.jpg)
+
 # :us: Good Bill Hunting
 
 ### By: Josh Holt, Adam Heywood, Bart Taylor and Jorge Lopez
