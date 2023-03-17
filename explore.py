@@ -3,18 +3,16 @@ import numpy as np
 from env import api_key
 import requests
 import json
-from jorge_acquire import *
+from acquire import *
 from bs4 import BeautifulSoup
 import os
-from jorge_prepare import *
+from prepare import *
 import matplotlib.pyplot as plt
-import requests
-import nltk
-import unicodedata
-import re
 from sklearn.preprocessing import StandardScaler
 import plotly.express as px
-
+import nltk
+import re
+import unicodedata
 
 def word_freq_new_df(df, clean_text):
     '''
@@ -54,12 +52,12 @@ def demo_vis(df):
     '''
     
     #Plot the most frequent democratic words and color by label
-    ax = df.sort_values('demo', ascending=False).head(5).plot.bar(color=['lightgrey', 'royalblue', 'red', 'green'], figsize=(16, 9))
+    ax = df.sort_values('demo', ascending=False).head(5).plot.bar(color=['lightgrey', 'royalblue', 'red', 'green'], edgecolor=['black'], lw = 3, figsize=(10, 5))
     plt.title('Most Common Words for Democrats')
     plt.ylabel('Count')
     plt.xlabel('Most Common Words')
     plt.xticks(rotation=45)
-    ax.legend(['Bills', 'Democrat', 'Republican', 'Independent'])
+    ax.legend(['Bills', 'Democrat', 'Republican', 'Independent'], bbox_to_anchor=(1.05, 1), loc='upper left', borderaxespad=0)
     return plt.show()
 
 
@@ -69,12 +67,12 @@ def repub_vis(df):
     '''
     
     #Plot the most frequent democratic words and color by label
-    ax = df.sort_values('repub', ascending=False).head(5).plot.bar(color=['lightgrey', 'royalblue', 'red', 'green'], figsize=(16, 9))
+    ax = df.sort_values('repub', ascending=False).head(5).plot.bar(color=['lightgrey', 'royalblue', 'red', 'green'], edgecolor=['black'], lw = 3, figsize=(10, 5))
     plt.title('Most Common Words for Republicans')
     plt.ylabel('Count')
     plt.xlabel('Most Common Words')
     plt.xticks(rotation=45)
-    ax.legend(['Bills', 'Democrat', 'Republican', 'Independent'])
+    ax.legend(['Bills', 'Democrat', 'Republican', 'Independent'], bbox_to_anchor=(1.05, 1), loc='upper left', borderaxespad=0)
     return plt.show()
 
 
@@ -112,12 +110,12 @@ def ind_vis(df):
     '''
     
     #Plot the most frequent independent words and color by label
-    ax = df.sort_values('ind', ascending=False).head(5).plot.bar(color=['lightgrey', 'royalblue', 'red', 'green'], figsize=(16, 9))
+    ax = df.sort_values('ind', ascending=False).head(5).plot.bar(color=['lightgrey', 'royalblue', 'red', 'green'], edgecolor=['black'], lw = 3, figsize=(10, 5))
     plt.title('Most Common Words for Independents')
     plt.ylabel('Count')
     plt.xlabel('Most Common Words')
     plt.xticks(rotation=45)
-    ax.legend(['Bills', 'Democrat', 'Republican', 'Independent'])
+    ax.legend(['Bills', 'Democrat', 'Republican', 'Independent'], bbox_to_anchor=(1.05, 1), loc='upper left', borderaxespad=0)
     return plt.show()
 
 
@@ -203,7 +201,6 @@ def top_trigram_viz(df):
     
     democrat_words = clean_text(' '.join(df[df['party'] == 'D']['bill_text']), 
                                  more_stopwords)
-    
     republican_words = clean_text(' '.join(df[df['party'] == 'R']['bill_text']), 
                                  more_stopwords)
     
@@ -236,7 +233,7 @@ def top_trigram_viz(df):
     fig.update_layout(font=dict(size=10, color='DarkSlateGray'))
     fig.update_layout(width=800, height=500)
     
-    return fig.show()
+    return fig.show('png')
 
 def top_bigrams_viz(df):
     more_stopwords = ['secretary','united','states','senate','house','representative',
@@ -250,6 +247,8 @@ def top_bigrams_viz(df):
                        'sequence','ii']
     
     democrat_words = clean_text(' '.join(df[df['party'] == 'D']['bill_text']), 
+                                 more_stopwords)
+    republican_words = clean_text(' '.join(df[df['party'] == 'R']['bill_text']), 
                                  more_stopwords)
     democrat_bigrams = pd.Series(nltk.ngrams(democrat_words, 2))
     top_democrat_bigrams =democrat_bigrams.value_counts().head(40)
@@ -284,6 +283,6 @@ def top_bigrams_viz(df):
         
     fig.update_layout(font=dict(size=10, color='DarkSlateGray'))
     fig.update_layout(width=800, height=500)
-    fig.show()
+    fig.show('png')
     
     return top_bigrams.head(2)
