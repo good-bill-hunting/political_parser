@@ -36,7 +36,8 @@ def find_bill_dates(input_string):
     """
     i=0
     try:
-        bill_date = re.search(r"\b[a-zA-Z]+\s+\d{1,2},\s+\d{4}\b", input_string).group()
+        bill_date = re.search(r"[a-zA-Z]+\s+\d{1,2}[)]?,\s+\d{4}\b", input_string).group()
+        #maybe re.sub doesn't error if ")" is not present
     except AttributeError:
         if i == 0:
             print(input_string)
