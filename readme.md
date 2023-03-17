@@ -39,8 +39,8 @@ Basic Steps of the legislative process:
 #### We acquired 26,000+ bills from api.govinfo.gov/.
 
 - Target Variable: Democrat, Republican, or Independent 
-- One Observation Represents: A sponsored Bill
-- Initial steps: API scraping, acquiring data, creating a list of political parties
+- One Observation Represents: A sponsored bill
+- Initial steps: API scraping, acquiring data and creating a list of political parties.
 
 ## :question: Initial Questions:
 1) Are there any words unique to a specific political party in determine Congressional Bills?
@@ -60,11 +60,14 @@ Basic Steps of the legislative process:
 2. Prepare data by dropping nulls (one row), cleaning and lemmatizing the text.
 3. Explore the words each party uses.
 4. Modeling using XGBoost, Decision Tree, Random Forest, KNN and Logistic Regression.
-    - The accuracy will be the baseline we use for this project.
+    - Accuracy will be the baseline we use for this project.
 
 
 ## Explore Takeaways:
-- Each political party had a focus area of concentration: for democrats the main are appears to be healthcare and higher education, republicans are focused on homeland security and China, and independents tend to lean toward economic concerns.
+- Each political party had a focus area of concentration: 
+    - Democrat's main areas appear to be healthcare and higher education. 
+    - Republicans are focused on homeland security and China.
+    - Independents tend to lean toward economic concerns.
 - The large amount of bills by democrats versus the other political parties may be obscuring the data from the other parties.
 - Common areas of concern appear to be health care and term limits, at least for democrats and republicans.
 - Although specific words may not necessarily determine if a bill is a certain political party, there are some words that are associated with particular political interests that could determine if a bill is from a particular political party.
@@ -73,7 +76,7 @@ Basic Steps of the legislative process:
 - Our baseline was predicting Democrat at 59%
 - Four of the five models performed better than the baseline on train and validate.
 - The Logistic Regression model performed the best on train (75%) and validate (71%).
-- We chose to move forward with the Logistic Regression model because KNN may be overfit.
+- We chose to move forward with the Logistic Regression model because KNN is likely overfit.
 
 ## Recommendations:
 - The results from this project should be made public for informational use on the focus of democratic and republican representatives.
