@@ -1,4 +1,4 @@
-![My Image](capital.jpg)
+![My Image](capital.png)
 
 # :us: Good Bill Hunting
 
