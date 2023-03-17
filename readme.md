@@ -83,7 +83,7 @@ Basic Steps of the legislative process:
 - The results from this project should be made public for informational use on the focus of democratic and republican representatives.
 - An investigation or inquiry should be established to determine why there is an imbalance of bills proposed between the two major political parties.
 
-## :footprints: Next Steps:
+## :paw_prints: Next Steps:
 - This project can be used as a starting point for a larger project on time series where a team can add other NLP bills throughout history and future bills to analyze the change in political areas of concentration over time.
 - Investigate which bills have made it through the process and are now laws and build a model that would predict, based off of the language, whether a bill is made into law or not.
 - Remove the dates from the bills and make another column to sort by the dates in order to determine if there is any change or difference in language between certain timeframes or major events.
