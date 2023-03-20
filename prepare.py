@@ -21,13 +21,30 @@ def prepare_bills_for_processing(df):
     """
     #Removes a bill with no text
     df = df[df.bill_text != "None"]
+    
+    #Finds the date for the bill
+    df['bill_date'] = df.bill_text.apply(find_bill_dates)
+    df['bill_date'] = pd.to_datetime(df['bill_date'])
+    
+    #Removes header. Must get date prior to using bill_trimmer
     df.bill_text = df.bill_text.apply(bill_trimmer)
     
     # creating a lemmatized column and cleaning the df
     df['lem']= df.bill_text.apply(clean_text)
     df['model']= df.lem.apply(join)
     return df
-    
+
+def find_bill_dates(input_string):
+    """
+    Finds the first date listed in the bill.
+    """
+    try:
+        bill_date = re.search(r"[A-Z][a-z]+\s+\d{1,2}[)]?,\s+\d{4}\b", input_string).group()
+        bill_date = re.sub(r"\)","",bill_date)
+    except:
+        print(input_string)
+    return bill_date    
+
 def bill_trimmer(input_string):
     """
     This function looks at bills and removes everything above 'A BILL' or 'RESOLUTION' or 'AN ACT'.
