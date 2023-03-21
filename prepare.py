@@ -15,13 +15,34 @@ def prepare_bills_for_processing(df):
     """
     #Removes a bill with no text
     df = df[df.bill_text != "None"]
+    
+    #Finds the date for the bill
+    df['bill_date'] = df.bill_text.apply(find_bill_dates)
+    df['bill_date'] = pd.to_datetime(df['bill_date'])
+    
+    #Removes header. Must get date prior to using bill_trimmer
     df.bill_text = df.bill_text.apply(bill_trimmer)
+    
+    #create length of original pulled bill text
+    df['length'] = df['bill_text'].str.len()
     
     # creating a lemmatized column and cleaning the df
     df['lem']= df.bill_text.apply(clean_text)
     df['model']= df.lem.apply(join)
-    return df
     
+    return df
+
+def find_bill_dates(input_string):
+    """
+    Finds the first date listed in the bill.
+    """
+    try:
+        bill_date = re.search(r"[A-Z][a-z]+\s+\d{1,2}[)]?,\s+\d{4}\b", input_string).group()
+        bill_date = re.sub(r"\)","",bill_date)
+    except:
+        print(input_string)
+    return bill_date    
+
 def bill_trimmer(input_string):
     """
     This function looks at bills and removes everything above 'A BILL' or 'RESOLUTION' or 'AN ACT'.
@@ -38,7 +59,14 @@ def clean_text(text, extra_stopwords=[]):
     This function takes in the words and cleans it, and returns the words that have been 
     lemmatized.
     '''
-
+    extra_stopwords = ['secretary','united','states','senate','house','representative',
+                       'representatives','fiscal','year','shall','adding','end','paragraph',
+                       'made','available','prebody','subsection','day','date','submit','described',
+                       'may','congress','following','new','enactment','code','section','assembled',
+                       'b','amended','short','title','sec','heading', 'et', 'seq',
+                       'chapter', 'effective','enacted','subchapter','entity', '42', 'usc', 'act',
+                       'establish', 'categorical', 'america', '1', '2', 'seq']
+        
     # creating the lemmatizer
     wnl = nltk.stem.WordNetLemmatizer()
     
