@@ -91,8 +91,16 @@ def acquire_bills(links, filename="data_bills.csv"):
 
                 #Primary sponsor
                 member = data['members'][0]['memberName']
+
                 #Party affiliation
                 party = data['members'][0]['party']
+                
+                #Co sponsor
+                co_sponsor = data['members'][1]['memberName']
+                co_sponsor_party = data['members'][1]['party']
+                
+                #Date bill 
+                bill_date = data
 
                 #Getting text of bill
                 link_to_bill = data['download']['txtLink']
@@ -105,6 +113,8 @@ def acquire_bills(links, filename="data_bills.csv"):
                 #Create a dictionary of the items and append to a list
                 temp_dictionary = {"sponsor":member,
                                    "party":party,
+                                   "cosponsor": co_sponsor,
+                                   "cosponsor_party": co_sponsor_party,
                                    "bill_text":str(text_of_bill)}
                 
                 master_list.append(temp_dictionary)
