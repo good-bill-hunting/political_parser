@@ -1,9 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[1]:
-
-
 import pandas as pd
 import numpy as np
 from typing import Dict, List, Optional, Union, cast
@@ -29,9 +23,13 @@ def prepare_bills_for_processing(df):
     #Removes header. Must get date prior to using bill_trimmer
     df.bill_text = df.bill_text.apply(bill_trimmer)
     
+    #create length of original pulled bill text
+    df['length'] = df['bill_text'].str.len()
+    
     # creating a lemmatized column and cleaning the df
     df['lem']= df.bill_text.apply(clean_text)
     df['model']= df.lem.apply(join)
+    
     return df
 
 def find_bill_dates(input_string):
@@ -68,7 +66,7 @@ def clean_text(text, extra_stopwords=[]):
                        'b','amended','short','title','sec','heading', 'et', 'seq',
                        'chapter', 'effective','enacted','subchapter','entity', '42', 'usc', 'act',
                        'establish', 'categorical', 'america', '1', '2', 'seq']
-    
+        
     # creating the lemmatizer
     wnl = nltk.stem.WordNetLemmatizer()
     
