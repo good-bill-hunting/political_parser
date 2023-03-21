@@ -11,8 +11,9 @@ import matplotlib.pyplot as plt
 from sklearn.preprocessing import StandardScaler
 import plotly.express as px
 import nltk
-import re
 import unicodedata
+import re
+
 
 def word_freq_new_df(df, clean_text):
     '''
