@@ -61,7 +61,14 @@ def clean_text(text, extra_stopwords=[]):
     This function takes in the words and cleans it, and returns the words that have been 
     lemmatized.
     '''
-
+    extra_stopwords = ['secretary','united','states','senate','house','representative',
+                       'representatives','fiscal','year','shall','adding','end','paragraph',
+                       'made','available','prebody','subsection','day','date','submit','described',
+                       'may','congress','following','new','enactment','code','section','assembled',
+                       'b','amended','short','title','sec','heading', 'et', 'seq',
+                       'chapter', 'effective','enacted','subchapter','entity', '42', 'usc', 'act',
+                       'establish', 'categorical', 'america', '1', '2', 'seq']
+    
     # creating the lemmatizer
     wnl = nltk.stem.WordNetLemmatizer()
     
