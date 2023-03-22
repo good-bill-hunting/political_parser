@@ -90,31 +90,41 @@ def acquire_bills(links, filename="data_bills.csv"):
                 data = response.json()
 
                 #Primary sponsor
-                member = data['members'][0]['memberName']
+                member = data["members"][0]["memberName"]
+                party = data["members"][0]["party"]
+                sponsor_state = data["members"][0]["state"]
+                
+                try:
+                    #Co sponsor
+                    co_sponsor = data["members"][1]["memberName"]
+                    co_sponsor_party = data["members"][1]["party"]
+                    co_sponsor_state = data["members"][1]["state"]
+                                            
+                except IndexError:
+                    #If no co sponsor
+                    co_sponsor = None
+                    co_sponsor_party = None
+                    co_sponsor_state = None
 
-                #Party affiliation
-                party = data['members'][0]['party']
-                
-                #Co sponsor
-                co_sponsor = data['members'][1]['memberName']
-                co_sponsor_party = data['members'][1]['party']
-                
                 #Date bill 
-                bill_date = data
+                bill_date = data["dateIssued"]
 
                 #Getting text of bill
-                link_to_bill = data['download']['txtLink']
+                link_to_bill = data["download"]["txtLink"]
                 response = requests.get(link_to_bill, params=params)
 
                 # Make a soup variable holding the response content
-                soup = BeautifulSoup(response.text, 'html.parser')
-                text_of_bill = soup.find('body')
+                soup = BeautifulSoup(response.text, "html.parser")
+                text_of_bill = soup.find("body")
 
                 #Create a dictionary of the items and append to a list
                 temp_dictionary = {"sponsor":member,
                                    "party":party,
+                                   "sponsor_state": sponsor_state,
                                    "cosponsor": co_sponsor,
                                    "cosponsor_party": co_sponsor_party,
+                                   "cosponsor_state": co_sponsor_state,
+                                   "other_bill_date": bill_date,
                                    "bill_text":str(text_of_bill)}
                 
                 master_list.append(temp_dictionary)
