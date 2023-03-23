@@ -5,6 +5,9 @@ import requests
 import json
 import os
 from bs4 import BeautifulSoup
+#Removes warnings and imporves asthenics
+import warnings
+warnings.filterwarnings("ignore")
 
 def get_links_to_bills():
     """

@@ -130,4 +130,4 @@ def split_data(df, target):
     y_test = test[target]
     
     
-    return train, X_train, y_train, X_val, y_val, X_test, y_test
+    return train, validate, test, X_train, y_train, X_val, y_val, X_test, y_test

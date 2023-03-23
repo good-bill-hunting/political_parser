@@ -1,9 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[2]:
-
-
 import pandas as pd
 import numpy as np
 from env import api_key
@@ -14,7 +8,11 @@ from bs4 import BeautifulSoup
 import os
 from prepare import *
 import matplotlib.pyplot as plt
-
+from sklearn.preprocessing import StandardScaler
+import plotly.express as px
+import nltk
+import re
+import unicodedata
 
 def word_freq_new_df(df, clean_text):
     '''
@@ -54,12 +52,12 @@ def demo_vis(df):
     '''
     
     #Plot the most frequent democratic words and color by label
-    ax = df.sort_values('demo', ascending=False).head(5).plot.bar(color=['lightgrey', 'royalblue', 'red', 'green'], figsize=(16, 9))
+    ax = df.sort_values('demo', ascending=False).head(5).plot.bar(color=['lightgrey', 'royalblue', 'red', 'green'], edgecolor=['black'], lw = 3, figsize=(10, 5))
     plt.title('Most Common Words for Democrats')
     plt.ylabel('Count')
     plt.xlabel('Most Common Words')
     plt.xticks(rotation=45)
-    ax.legend(['Bills', 'Democrat', 'Republican', 'Independent'])
+    ax.legend(['Bills', 'Democrat', 'Republican', 'Independent'], bbox_to_anchor=(1.05, 1), loc='upper left', borderaxespad=0)
     return plt.show()
 
 
@@ -69,12 +67,12 @@ def repub_vis(df):
     '''
     
     #Plot the most frequent democratic words and color by label
-    ax = df.sort_values('repub', ascending=False).head(5).plot.bar(color=['lightgrey', 'royalblue', 'red', 'green'], figsize=(16, 9))
+    ax = df.sort_values('repub', ascending=False).head(5).plot.bar(color=['lightgrey', 'royalblue', 'red', 'green'], edgecolor=['black'], lw = 3, figsize=(10, 5))
     plt.title('Most Common Words for Republicans')
     plt.ylabel('Count')
     plt.xlabel('Most Common Words')
     plt.xticks(rotation=45)
-    ax.legend(['Bills', 'Democrat', 'Republican', 'Independent'])
+    ax.legend(['Bills', 'Democrat', 'Republican', 'Independent'], bbox_to_anchor=(1.05, 1), loc='upper left', borderaxespad=0)
     return plt.show()
 
 
@@ -112,12 +110,12 @@ def ind_vis(df):
     '''
     
     #Plot the most frequent independent words and color by label
-    ax = df.sort_values('ind', ascending=False).head(5).plot.bar(color=['lightgrey', 'royalblue', 'red', 'green'], figsize=(16, 9))
+    ax = df.sort_values('ind', ascending=False).head(5).plot.bar(color=['lightgrey', 'royalblue', 'red', 'green'], edgecolor=['black'], lw = 3, figsize=(10, 5))
     plt.title('Most Common Words for Independents')
     plt.ylabel('Count')
     plt.xlabel('Most Common Words')
     plt.xticks(rotation=45)
-    ax.legend(['Bills', 'Democrat', 'Republican', 'Independent'])
+    ax.legend(['Bills', 'Democrat', 'Republican', 'Independent'], bbox_to_anchor=(1.05, 1), loc='upper left', borderaxespad=0)
     return plt.show()
 
 
@@ -190,9 +188,122 @@ def ind_trigrams_vis(df):
     plt.title('Commonly occurring independent trigrams')
     return plt.show()
 
+def top_trigram_viz(df):
+    more_stopwords = ['secretary','united','states','senate','house','representative',
+                   'representatives','fiscal','year','shall','adding','end','paragraph',
+                   'made','available','prebody','subsection','day','date','submit','described',
+                   'may','congress','following','new','enactment','code','section','assembled',
+                   'b','c','amended','short','title','sec','heading', 'et', 'seq',
+                    'chapter', 'effective','enacted','subchapter','entity', '42', 'usc', 'act', 'establish',
+                       'categorical', 'america', '1', '2', 'seq','authorization',
+                       'appropriations', 'appropriated', 'inserting','numerical',
+                       'sequence','ii']
+    
+    democrat_words = clean_text(' '.join(df[df['party'] == 'D']['bill_text']), 
+                                 more_stopwords)
+    republican_words = clean_text(' '.join(df[df['party'] == 'R']['bill_text']), 
+                                 more_stopwords)
+    
+    republican_trigrams = pd.Series(nltk.ngrams(republican_words, 3))
+    top_republican_trigrams =pd.DataFrame(republican_trigrams.value_counts().head(40))
+    democrat_trigrams = pd.Series(nltk.ngrams(democrat_words, 3))
+    top_democrat_trigrams =pd.DataFrame(democrat_trigrams.value_counts().head(40))
+    top_democrat_trigrams['party'] = 'D'
+    top_republican_trigrams['party'] = 'R'
+    top_democrat_trigrams.reset_index(inplace = True)
+    top_republican_trigrams.reset_index(inplace = True)
+    top_democrat_trigrams.rename(columns={"index": "trigram", 
+                                       0: "frequency"},inplace = True)
 
-# In[ ]:
+    top_republican_trigrams.rename(columns={"index": "trigram", 
+                                       0: "frequency"},inplace = True)
+    scaler = StandardScaler()
+    top_republican_trigrams['scaled_freq'] = scaler.fit_transform(top_republican_trigrams['frequency'].values.reshape(-1, 1))
+
+    top_democrat_trigrams['scaled_freq'] = scaler.fit_transform(top_democrat_trigrams['frequency'].values.reshape(-1, 1))
+    top_trigrams = pd.concat([top_democrat_trigrams.head(10),
+                          top_republican_trigrams.head(10)], ignore_index=True)
+    top_trigrams.sort_values(by = ['scaled_freq'], ascending = False ,inplace = True)
+
+    fig = px.bar(top_trigrams, x='scaled_freq', y='party', 
+             template='plotly_white', orientation='h',
+             labels={'scaled_freq': 'Frequency of Trigram', 'trigram': 'trigram', 
+                     'party': 'Party'},
+             color='trigram', color_discrete_sequence=px.colors.qualitative.Safe)
+    fig.update_layout(font=dict(size=10, color='DarkSlateGray'))
+    fig.update_layout(width=800, height=500)
+    
+    return fig.show('png')
+
+def top_bigrams_viz(df):
+    more_stopwords = ['secretary','united','states','senate','house','representative',
+                   'representatives','fiscal','year','shall','adding','end','paragraph',
+                   'made','available','prebody','subsection','day','date','submit','described',
+                   'may','congress','following','new','enactment','code','section','assembled',
+                   'b','c','amended','short','title','sec','heading', 'et', 'seq',
+                    'chapter', 'effective','enacted','subchapter','entity', '42', 'usc', 'act', 'establish',
+                       'categorical', 'america', '1', '2', 'seq','authorization',
+                       'appropriations', 'appropriated', 'inserting','numerical',
+                       'sequence','ii']
+    
+    democrat_words = clean_text(' '.join(df[df['party'] == 'D']['bill_text']), 
+                                 more_stopwords)
+    republican_words = clean_text(' '.join(df[df['party'] == 'R']['bill_text']), 
+                                 more_stopwords)
+    democrat_bigrams = pd.Series(nltk.ngrams(democrat_words, 2))
+    top_democrat_bigrams =democrat_bigrams.value_counts().head(40)
+    top_democrat_bigrams = pd.DataFrame(top_democrat_bigrams)
+    top_democrat_bigrams['party'] = 'D'
+    republican_words = clean_text(' '.join(df[df['party'] == 'R']['bill_text']), 
+                                  more_stopwords)
+    republican_bigrams = pd.Series(nltk.ngrams(republican_words, 2))
+    top_republican_bigrams =republican_bigrams.value_counts().head(40)
+    top_republican_bigrams = pd.DataFrame(top_republican_bigrams)
+    top_republican_bigrams['party'] = 'R'
+    top_democrat_bigrams.reset_index(inplace = True)
+    top_republican_bigrams.reset_index(inplace = True)
+    top_democrat_bigrams.rename(columns={"index": "bigram", 
+                                         0: "frequency"},inplace = True)
+        
+    top_republican_bigrams.rename(columns={"index": "bigram", 
+                                       0: "frequency"},inplace = True)
+    scaler = StandardScaler()
+    top_republican_bigrams['scaled_freq'] = scaler.fit_transform(top_republican_bigrams['frequency'].values.reshape(-1, 1))
+
+    top_democrat_bigrams['scaled_freq'] = scaler.fit_transform(top_democrat_bigrams['frequency'].values.reshape(-1, 1))
+    top_bigrams = pd.concat([top_democrat_bigrams.head(10), top_republican_bigrams.head(10)], 
+                       ignore_index = True)
+    top_bigrams.sort_values(by = ['scaled_freq'], ascending = False ,inplace = True)
+
+    fig = px.bar(top_bigrams, x='scaled_freq', y='party', 
+                 template='plotly_white', orientation='h',
+                 labels={'scaled_freq': 'Frequency of Bigram', 'bigram': 'Bigram', 
+                         'party': 'Party'},
+                 color='bigram', color_discrete_sequence=px.colors.qualitative.Safe)
+        
+    fig.update_layout(font=dict(size=10, color='DarkSlateGray'))
+    fig.update_layout(width=800, height=500)
+    fig.show('png')
+    
+    return top_bigrams.head(2)
 
 
-
-
+def partisan_viz(df):
+    df['cosponsor_party'] = df['cosponsor_party'].fillna('N')
+    bipart_df = pd.DataFrame(df['party'].value_counts())
+    bipart_df.rename(columns = {'party': 'total_bills'}, inplace = True)
+    bipart_counts = df[df['party'] != (df['cosponsor_party'])]['party'].value_counts()
+    no_co_counts = df[df['cosponsor_party'] == 'N']['party'].value_counts()
+    bipart_df['bipart_bills'] = (bipart_counts - no_co_counts)
+    bipart_df['partisan_bills'] = df[df['party'] == (df['cosponsor_party'])]['party'].value_counts()
+    bipart_df['no_cosponsor'] = df[df['cosponsor_party'] == 'N']['party'].value_counts()
+    bipart_df.reset_index(inplace = True)
+    bipart_df.rename(columns = {'index':'party'}, inplace = True)
+    
+    vz = bipart_df.head(2).plot(kind="bar", figsize = (5, 4), x = 'party')
+    vz.set(ylabel="Number of Bills",
+           xlabel="Party", title = 'Partisan vs Bipartisan Bill Breakdown')
+    vz.set_xticklabels(['Democrat', 'Republican'])
+    vz.legend(["Total Bills", "Bipartisan Bills", "Partisan Bills", "No Cosponsor"])
+    plt.xticks(rotation='horizontal')
+    return plt.show()
