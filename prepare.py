@@ -42,6 +42,9 @@ def prepare_bills_for_processing(df):
 
         #create length of original pulled bill text
         df['length'] = df['bill_text'].str.len()
+        
+        #Add column to indicate bipartisan sponsor
+        df["bipartisan_bill"] = (df.cosponsor_party.notna() & (df.party != df.cosponsor_party))
 
         # creating a lemmatized column and cleaning the df
         df['lem']= df.bill_text.apply(clean_text)
