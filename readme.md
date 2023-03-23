@@ -13,13 +13,18 @@
 ## :scroll: Goal: 
 Aquire the text of political bills between 2001 and 2023 and use NLP to determine the political sponsor using only the body text of the bill.
 
+## :scroll: Stretch Goal:
+We will predict if a bill will receive bipartisan support using the text of the bill.
+
 ## :book: Data Dictionary:
 | Feature | Definition |
 |:--------|:-----------|
 |congressional bill| legislative proposals from the House of Representatives and Senate within the United States Congress. More info: https://www.govinfo.gov/help/bills#:~:text=A%20bill%20is%20a%20legislative,(first%20and%20second%20sessions). |
 |political party| Made up of individuals who organize to win elections, operate government, and influence public policy. The Democratic and Republican parties are currently the primary parties in Congress. More info: https://www.senate.gov/reference/reference_index_subjects/Political_Parties_vrd.htm|
 |sponsor| Patron, usually a legislator, who presents a bill or resolution to a legislature for consideration.|
-|initial cosponsor or original cosponsor| Senator or representative who was listed as a cosponsor at the time of a bill's introduction|
+|initial cosponsor or original cosponsor| Senator or representative who was listed as a cosponsor at the time of a bill's introduction.|
+|partisan| From a single political party.|
+|bipartisan| From two political parties.|
 
 ## :balance_scale: How laws are made: 
 
@@ -86,3 +91,7 @@ Basic Steps of the legislative process:
 - This project can be used as a starting point for a larger project on time series where a team can add other NLP bills throughout history and future bills to analyze the change in political areas of concentration over time.
 - Investigate which bills have made it through the process and are now laws and build a model that would predict, based off of the language, whether a bill is made into law or not.
 - Remove the dates from the bills and make another column to sort by the dates in order to determine if there is any change or difference in language between certain timeframes or major events.
+
+## Predicting if a bill is Bipartisan:
+- Our baseline is for partisan bills which is sponsor and cosponsor from the same party or bills that have no cosponsor. This is approximately 67% of the bills.
+- XGBoost and Logistic Regression both performed at 
