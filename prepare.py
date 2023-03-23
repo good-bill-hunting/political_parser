@@ -15,34 +15,50 @@ import nltk
 import unicodedata
 import re
 
+#Removes warnings and imporves asthenics
+import warnings
+warnings.filterwarnings("ignore")
+
 def prepare_bills_for_processing(df):
     """
     Combines single line code and functions to prepare the data.
     """
-    #Removes a bill with no text
-    df = df[df.bill_text != "None"]
-    df['bill_date'] = df.bill_text.apply(find_bill_dates)
-    df['bill_date'].to_datetime()
-    df.bill_text = df.bill_text.apply(bill_trimmer)
+    filename = "processed_df.csv"
     
-    # creating a lemmatized column and cleaning the df
-    df['lem']= df.bill_text.apply(clean_text)
-    df['model']= df.lem.apply(join)
-    return df
+    #Checks if file is catched
+    if os.path.isfile(filename):
+        
+        df = pd.read_csv(filename)
+        
+        return df
+    else:
+        #Removes a bill with no text
+        df = df[df.bill_text != "None"]
+        #Finds the date for the bill
+        df['bill_date'] = df.bill_text.apply(find_bill_dates)
+        df['bill_date'] = pd.to_datetime(df['bill_date'])
+        #Removes header. Must get date prior to using bill_trimmer
+        df.bill_text = df.bill_text.apply(bill_trimmer)
+
+        #create length of original pulled bill text
+        df['length'] = df['bill_text'].str.len()
+
+        # creating a lemmatized column and cleaning the df
+        df['lem']= df.bill_text.apply(clean_text)
+        df['model']= df.lem.apply(join)
+        #Saving links to csv
+        df.to_csv("processed_df.csv", index=False)
+        return df
 
 def find_bill_dates(input_string):
     """
     Finds the first date listed in the bill.
     """
-    i=0
     try:
-        bill_date = re.search(r"[a-zA-Z]+\s+\d{1,2}[)]?,\s+\d{4}\b", input_string).group()
-        #maybe re.sub doesn't error if ")" is not present
-    except AttributeError:
-        if i == 0:
-            print(input_string)
-        i+=1
-    print(i)
+        bill_date = re.search(r"[A-Z][a-z]+\s+\d{1,2}[)]?,\s+\d{4}\b", input_string).group()
+        bill_date = re.sub(r"\)","",bill_date)
+    except:
+        print(input_string)
     return bill_date
 
 def bill_trimmer(input_string):
@@ -51,9 +67,8 @@ def bill_trimmer(input_string):
     """
     #Identifies the position of 'A BILL'
     text_pos = re.split('(A BILL|RESOLUTION|AN ACT)', input_string, 1)
-    bill_date = re.find(r'\w{3}\s\d{1,2},\s\d{4}', text_pos[0])
     output_string = text_pos[2]
-    return output_string, bill_date
+    return output_string
 
 
 def clean_text(text, extra_stopwords=[]):
