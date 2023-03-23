@@ -280,3 +280,19 @@ def democrat_bigrams_viz(df):
     return top_bigrams.head(2)
 
 
+def partisan_viz(df):
+    df['cosponsor_party'] = df['cosponsor_party'].fillna('N')
+    bipart_df = pd.DataFrame(df['party'].value_counts())
+    bipart_df.rename(columns = {'party': 'total_bills'}, inplace = True)
+    bipart_df['bipart_bills'] = df[df['party'] != (df['cosponsor_party'])]['party'].value_counts()
+    bipart_df['partisan_bills'] = df[df['party'] == (df['cosponsor_party'])]['party'].value_counts()
+    bipart_df['no_cosponsor'] = df[df['cosponsor_party'] == 'N']['party'].value_counts()
+    bipart_df.reset_index(inplace = True)
+    bipart_df.rename(columns = {'index':'party'}, inplace = True)
+    vz = bipart_df.head(2).plot(kind="bar", figsize = (5, 4), x = 'party')
+    vz.set(ylabel="Number of Bills",
+           xlabel="Party", title = 'Partisan vs Bipartisan Bill Breakdown')
+    vz.legend(["Total Bills", "Bipartisan Bills", "Partisan Bills", "No Cosponsor"])
+    
+    return plt.show()
+
