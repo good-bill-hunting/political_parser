@@ -13,24 +13,35 @@ def prepare_bills_for_processing(df):
     """
     Combines single line code and functions to prepare the data.
     """
-    #Removes a bill with no text
-    df = df[df.bill_text != "None"]
+    filename = "processed_df.csv"
     
-    #Finds the date for the bill
-    df['bill_date'] = df.bill_text.apply(find_bill_dates)
-    df['bill_date'] = pd.to_datetime(df['bill_date'])
-    
-    #Removes header. Must get date prior to using bill_trimmer
-    df.bill_text = df.bill_text.apply(bill_trimmer)
-    
-    #create length of original pulled bill text
-    df['length'] = df['bill_text'].str.len()
-    
-    # creating a lemmatized column and cleaning the df
-    df['lem']= df.bill_text.apply(clean_text)
-    df['model']= df.lem.apply(join)
-    
-    return df
+    #Checks if file is catched
+    if os.path.isfile(filename):
+        
+        df = pd.read_csv(filename)
+        
+        return df
+    else:
+        #Removes a bill with no text
+        df = df[df.bill_text != "None"]
+        #Finds the date for the bill
+        df['bill_date'] = df.bill_text.apply(find_bill_dates)
+        df['bill_date'] = pd.to_datetime(df['bill_date'])
+        #Removes header. Must get date prior to using bill_trimmer
+        df.bill_text = df.bill_text.apply(bill_trimmer)
+
+        #create length of original pulled bill text
+        df['length'] = df['bill_text'].str.len()
+        
+        #Add column to indicate bipartisan sponsor
+        df["bipartisan_bill"] = (df.cosponsor_party.notna() & (df.party != df.cosponsor_party))
+
+        # creating a lemmatized column and cleaning the df
+        df['lem']= df.bill_text.apply(clean_text)
+        df['model']= df.lem.apply(join)
+        #Saving links to csv
+        df.to_csv("processed_df.csv", index=False)
+        return df
 
 def find_bill_dates(input_string):
     """
