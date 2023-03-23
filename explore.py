@@ -295,7 +295,8 @@ def partisan_viz(df):
     vz = bipart_df.head(2).plot(kind="bar", figsize = (5, 4), x = 'party')
     vz.set(ylabel="Number of Bills",
            xlabel="Party", title = 'Partisan vs Bipartisan Bill Breakdown')
+    vz.set_xticklabels(['Democrat', 'Republican'])
     vz.legend(["Total Bills", "Bipartisan Bills", "Partisan Bills", "No Cosponsor"])
-    
+    plt.xticks(rotation='horizontal')
     return plt.show()
 
