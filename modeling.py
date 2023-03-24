@@ -312,7 +312,7 @@ def knn_mod(X_train, y_train, X_val, y_val, metric = 1, print_scores = False):
     return train_score, val_score
 
     
-def find_model_scores(X_train, y_train, X_val, y_val, metric = 1, print_scores = False):
+def find_party_scores(X_train, y_train, X_val, y_val, metric = 1, print_scores = False):
     """
     This function takes in the target DataFrame, runs the data against four
     machine learning models and outputs some visuals.
@@ -528,7 +528,7 @@ def find_model_scores_bipartison(X_train, y_train, X_val, y_val, metric = 1, pri
     plt.show()
     
     
-def final_test(X_train, y_train, X_val, y_val, X_test, y_test):
+def final_party_test(X_train, y_train, X_val, y_val, X_test, y_test):
     """
     This function takes in the target DataFrame, runs the data against the
     machine learning model selected for the final test and outputs some visuals.
@@ -571,7 +571,7 @@ def final_test(X_train, y_train, X_val, y_val, X_test, y_test):
     fig, ax = plt.subplots(facecolor="gainsboro")
 
     plt.figure(figsize=(6,6))
-    ax.set_title('Logistic Regression results')
+    ax.set_title('Predicting Party Logistic Regression results')
     ax.axhspan(0, baseline, facecolor='red', alpha=0.2)
     ax.axhspan(baseline, ymax=2, facecolor='palegreen', alpha=0.3)
     ax.axhline(baseline, label="Baseline", c='red', linestyle=':')
@@ -587,11 +587,78 @@ def final_test(X_train, y_train, X_val, y_val, X_test, y_test):
 
     # Need to have baseline input:
     ax.set_xticks([0.5, 1.0, 1.5], ['Training', 'Validation', 'Test']) 
-    ax.set_ylim(bottom=0.4, top=1)
+    ax.set_ylim(bottom=0.4, top=0.8)
     #Zoom into the important area
     #plt.ylim(bottom=200000, top=400000)
     
-    #plt.savefig('final_model_test.png')
+    plt.savefig('final_party_test.png')
+
+    #ax.legend(loc='lower right', framealpha=.9, facecolor="whitesmoke", edgecolor='darkolivegreen')
+    
+def final_bipartisan_test(X_train, y_train, X_val, y_val, X_test, y_test):
+    """
+    This function takes in the target DataFrame, runs the data against the
+    machine learning model selected for the final test and outputs some visuals.
+    """
+    
+    #Eastablishes the standard to beat
+    baseline = 1 - round(len(y_train[y_train == True])/ len(y_train),4)
+    
+    #List for gathering metrics
+    final_model_scores = []
+    
+    """ *** Builds and fits Logistic Regression Model *** """  
+    
+    #Creating the random forest object
+    #Creating a logistic regression model
+    logit = LogisticRegression(random_state=1969,
+                               max_iter=500,
+                               solver='saga',
+                               penalty='l1',
+                               n_jobs=-1)
+
+    #Fit the model to the train data
+    logit.fit(X_train, y_train)
+
+    #Get the accuracy scores
+    train_score = logit.score(X_train, y_train)
+    val_score =  logit.score(X_val, y_val)
+    test_score = logit.score(X_test, y_test)
+
+    #Adds score to metrics list for comparison
+    final_model_scores.append({'Model':'Logistic Regression',
+                              'Accuracy on Train': round(train_score,4), 
+                              'Accuracy on Validate': round(val_score,4), 
+                              'Accuracy on Test': round(test_score,4)})
+    #Turn scores into a DataFrame
+    final_model_scores = pd.DataFrame(data = final_model_scores)
+    print(final_model_scores)
+    
+    #Create visuals to show the results
+    fig, ax = plt.subplots(facecolor="gainsboro")
+
+    plt.figure(figsize=(6,6))
+    ax.set_title('Bipartisan Support Logistic Regression results')
+    ax.axhspan(0, baseline, facecolor='red', alpha=0.2)
+    ax.axhspan(baseline, ymax=2, facecolor='palegreen', alpha=0.3)
+    ax.axhline(baseline, label="Baseline", c='red', linestyle=':')
+
+    ax.set_ylabel('Accuracy Score')    
+
+    #x_pos = [0.5, 1, 1.5]
+    width = 0.25
+
+    bar1 = ax.bar(0.5, height=final_model_scores['Accuracy on Train'],width =width, color=('#4e5e33'), label='Train', edgecolor='dimgray')
+    bar2 = ax.bar(1, height= final_model_scores['Accuracy on Validate'], width =width, color=('#8bc34b'), label='Validate', edgecolor='dimgray')
+    bar3 = ax.bar(1.5, height=final_model_scores['Accuracy on Test'], width =width, color=('tomato'), label='Test', edgecolor='dimgray')
+
+    # Need to have baseline input:
+    ax.set_xticks([0.5, 1.0, 1.5], ['Training', 'Validation', 'Test']) 
+    ax.set_ylim(bottom=0.4, top=0.8)
+    #Zoom into the important area
+    #plt.ylim(bottom=200000, top=400000)
+    
+    plt.savefig('final_bipartisan_test.png')
 
     #ax.legend(loc='lower right', framealpha=.9, facecolor="whitesmoke", edgecolor='darkolivegreen')
     
