@@ -102,7 +102,7 @@ Basic Steps of the legislative process:
     - Exploring election years.
     - How focus areas change over time.
     - Response to major events.
-- Investigate which bills have made it through the process and are now laws and build a model that would predict, based off of the language, whether a bill is made into law or not.
+- Build a model that would predict, based off of the language, whether a bill is made into law or not.
 - Link bills to funding, cost of development, total cost to taxpayers and other monitary metrics.
 
 
