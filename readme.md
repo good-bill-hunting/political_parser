@@ -10,9 +10,10 @@
 <a href="#"><img alt="Matplotlib" src="https://img.shields.io/badge/Matplotlib-8DF9C1.svg?logo=matplotlib&logoColor=blue"></a>
 <a href="#"><img alt="seaborn" src="https://img.shields.io/badge/seaborn-65A9A8.svg?logo=pandas&logoColor=red"></a>
 <a href="#"><img alt="sklearn" src="https://img.shields.io/badge/sklearn-4b86b4.svg?logo=scikitlearn&logoColor=black"></a>
+<a href="#"><img alt="SciPy" src="https://img.shields.io/badge/SciPy-1560bd.svg?logo=scipy&logoColor=blue"></a>
 
 ## :scroll: Goal: 
-Aquire the text of political bills between 2001 and 2023 and use NLP to determine the political sponsor using only the body text of the bill.
+We aquired legislative bills between 2001 and 2023. Our goal is to identify bills that hit the political sweet spot. It aligns with the sponsor's political party and will recieve bipartisan support.
 
 ## :book: Data Dictionary:
 | Feature | Definition |
@@ -20,7 +21,9 @@ Aquire the text of political bills between 2001 and 2023 and use NLP to determin
 |congressional bill| legislative proposals from the House of Representatives and Senate within the United States Congress. More info: https://www.govinfo.gov/help/bills#:~:text=A%20bill%20is%20a%20legislative,(first%20and%20second%20sessions). |
 |political party| Made up of individuals who organize to win elections, operate government, and influence public policy. The Democratic and Republican parties are currently the primary parties in Congress. More info: https://www.senate.gov/reference/reference_index_subjects/Political_Parties_vrd.htm|
 |sponsor| Patron, usually a legislator, who presents a bill or resolution to a legislature for consideration.|
-|initial cosponsor or original cosponsor| Senator or representative who was listed as a cosponsor at the time of a bill's introduction|
+|initial cosponsor or original cosponsor| Senator or representative who was listed as a cosponsor at the time of a bill's introduction.|
+|partisan| From a single political party.|
+|bipartisan| From two different political parties.|
 
 ## :balance_scale: How laws are made: 
 
@@ -39,9 +42,11 @@ Basic Steps of the legislative process:
 ## :page_with_curl: Data Overview:
 #### We acquired 26,000+ bills from api.govinfo.gov/.
 
-- Target Variable: Democrat, Republican, or Independent 
+- Target Variable #1: Sponsor's political party. Example: Democrat, Republican, or Independent
+- Target Variable #2: Cosponsor's political party is different than the sponsor's. 
+
 - One Observation Represents: A sponsored bill
-- Initial steps: API scraping, acquiring data and creating a list of political parties.
+- Initial steps: API scraping, acquiring data and preparing the bills for exploration.
 
 ## :question: Initial Questions:
 1) Are there any words unique to a specific political party in determine Congressional Bills?
@@ -60,33 +65,45 @@ Basic Steps of the legislative process:
 1. Acquire data from govinfo.gov's api.
 2. Prepare data by dropping nulls (one row), cleaning and lemmatizing the text.
 3. Explore the words each party uses.
-4. Modeling using XGBoost, Decision Tree, Random Forest, KNN and Logistic Regression.
+4. Modeling using XGBoost, Decision Tree, Random Forest and Logistic Regression.
     - Accuracy will be the baseline we use for this project.
-
 
 ## Explore Takeaways:
 - Each political party had a focus area of concentration: 
     - Democrat's main areas appear to be healthcare and higher education. 
     - Republicans are focused on homeland security and China.
     - Independents tend to lean toward economic concerns.
-- The large amount of bills by democrats versus the other political parties may be obscuring the data from the other parties.
+    - Bipartisan support is split into thirds:
+        - 1/3 No cosponsor
+        - 1/3 Same party cosponsor
+        - 1/3 Different party cosponsor
+- The large amount of bills by democrats (60%) versus the other political parties (40%) may be obscuring the data from the other parties.
 - Common areas of concern appear to be health care and term limits, at least for democrats and republicans.
 - Although specific words may not necessarily determine if a bill is a certain political party, there are some words that are associated with particular political interests that could determine if a bill is from a particular political party.
 
-## Modeling Takeaways:
+## First Model Takeaways:
 - Our baseline was predicting Democrat at 59%
 - Four of the five models performed better than the baseline on train and validate.
 - The Logistic Regression model performed the best on train (75%) and validate (71%).
-- We chose to move forward with the Logistic Regression model because KNN is likely overfit.
+- We chose to move forward with the Logistic Regression model.
 
-## Recommendations:
-- The results from this project should be made public for informational use on the focus of democratic and republican representatives.
-- An investigation or inquiry should be established to determine why there is an imbalance of bills proposed between the two major political parties.
+## Second Model Takeaways:
+- Our baseline was predicting Non-partisan support at 67%
+- All four models performed better than baseline on train and validate.
+- The Logistic Regression model performed the best on train (76%) and validate (72%).
+- We chose to move forward with the Logistic Regression model. 
 
-## :paw_prints: Next Steps:
-- This project can be used as a starting point for a larger project on time series where a team can add other NLP bills throughout history and future bills to analyze the change in political areas of concentration over time.
+## Deliverables:
+- A model that predicts the politcial party of the sponsor.
+- A model that predicts if the bill will recieve support from a party different than their own.
+
+## :footprints: Next Steps:
+- Adding time series analysis:
+    - Exploring election years.
+    - How focus areas change over time.
+    - Response to major events.
 - Investigate which bills have made it through the process and are now laws and build a model that would predict, based off of the language, whether a bill is made into law or not.
-- Remove the dates from the bills and make another column to sort by the dates in order to determine if there is any change or difference in language between certain timeframes or major events.
+- Link bills to funding, cost of development, total cost to taxpayers and other monitary metrics.
 
 
 #### Photo credit:
