@@ -13,7 +13,7 @@
 <a href="#"><img alt="SciPy" src="https://img.shields.io/badge/SciPy-1560bd.svg?logo=scipy&logoColor=blue"></a>
 
 ## :scroll: Goal: 
-We aquired legislative bills between 2001 and 2023. Our goal is to identify bills that hit the political sweet spot. It aligns with the sponsor's political party and will recieve bipartisan support.
+We acquired legislative bills between 2001 and 2023. Our goal is to identify bills that hit the political sweet spot. It aligns with the sponsor's political party and will receive bipartisan support.
 
 ## :book: Data Dictionary:
 | Feature | Definition |
@@ -94,16 +94,16 @@ Basic Steps of the legislative process:
 - We chose to move forward with the Logistic Regression model. 
 
 ## Deliverables:
-- A model that predicts the politcial party of the sponsor.
-- A model that predicts if the bill will recieve support from a party different than their own.
+- A model that predicts the political party of the sponsor.
+- A model that predicts if the bill will receive support from a party different than their own.
 
 ## :footprints: Next Steps:
 - Adding time series analysis:
     - Exploring election years.
     - How focus areas change over time.
     - Response to major events.
-- Build a model that will predict whether a bill is made into law or not.
-- Link bills to funding, cost of development, total cost to taxpayers and other monitary metrics.
+- Create a model that will predict whether a bill is made into law or not.
+- Link bills to funding, cost of development, total cost to taxpayers and other monetary metrics.
 
 
 #### Photo credit:
